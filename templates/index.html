@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}{{ site_name or 'ModernBlog' }}{% endblock %}
-{% block description %}Discover amazing content on {{ site_name or 'ModernBlog' }}{% endblock %}
+{% block title %}{{ site_name or 'ModernBlog' }} - Modern Blog Platform{% endblock %}
+{% block description %}Discover amazing content on {{ site_name or 'ModernBlog' }}. Read the latest posts, insights, and stories from our community of writers.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ site_name or 'ModernBlog' }}",
+  "url": "{{ url_for('index', _external=True) }}",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ url_for('search', _external=True) }}?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->

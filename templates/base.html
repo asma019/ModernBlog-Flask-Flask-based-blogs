@@ -6,18 +6,25 @@
     <title>{% block title %}Modern Blog{% endblock %}</title>
     <meta name="description" content="{% block description %}A modern blog with amazing content{% endblock %}">
     <meta name="keywords" content="{% block keywords %}blog, modern, content{% endblock %}">
+    <meta name="author" content="{% block author %}{{ site_name or 'ModernBlog' }}{% endblock %}">
+    <link rel="canonical" href="{{ request.url }}">
     
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}{{ self.title() }}{% endblock %}">
     <meta property="og:description" content="{% block og_description %}{{ self.description() }}{% endblock %}">
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:url" content="{{ request.url }}">
+    <meta property="og:site_name" content="{{ site_name or 'ModernBlog' }}">
     {% block og_image %}{% endblock %}
     
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ self.og_title() }}">
     <meta name="twitter:description" content="{{ self.og_description() }}">
+    {% block twitter_image %}{% endblock %}
+    
+    <!-- JSON-LD Structured Data -->
+    {% block structured_data %}{% endblock %}
     
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">

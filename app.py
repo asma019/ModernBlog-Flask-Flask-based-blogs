@@ -810,6 +810,76 @@ Return only the markdown content, no additional text or formatting.
     except Exception as e:
         return jsonify({'error': f'Failed to generate blog: {str(e)}'}), 500
 
+@app.route('/robots.txt')
+def robots_txt():
+    base_url = request.url_root.rstrip('/')
+    return '''User-agent: *
+Allow: /
+Disallow: /admin/
+Sitemap: {}/sitemap.xml'''.format(base_url), 200, {'Content-Type': 'text/plain'}
+
+@app.route('/sitemap.xml')
+def sitemap_xml():
+    base_url = request.url_root.rstrip('/')
+    
+    posts = Post.query.filter_by(published=True).all()
+    pages = Page.query.filter_by(published=True).all()
+    categories = Category.query.all()
+    
+    sitemap = '''<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+'''
+    
+    # Homepage
+    sitemap += f'''  <url>
+    <loc>{base_url}</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+'''
+    
+    # Posts
+    for post in posts:
+        sitemap += f'''  <url>
+    <loc>{base_url}/post/{post.slug}</loc>
+    <lastmod>{post.updated_at.strftime('%Y-%m-%d')}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+'''
+    
+    # Pages
+    for page in pages:
+        sitemap += f'''  <url>
+    <loc>{base_url}/page/{page.slug}</loc>
+    <lastmod>{page.updated_at.strftime('%Y-%m-%d')}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+'''
+    
+    # Categories
+    for category in categories:
+        sitemap += f'''  <url>
+    <loc>{base_url}/category/{category.slug}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+'''
+    
+    # Categories page
+    sitemap += f'''  <url>
+    <loc>{base_url}/categories</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+'''
+    
+    sitemap += '</urlset>'
+    
+    response = app.response_class(sitemap, mimetype='application/xml')
+    return response
+
 @app.errorhandler(404)
 def not_found_error(error):
     categories = Category.query.all()

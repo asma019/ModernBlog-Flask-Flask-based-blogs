@@ -81,7 +81,7 @@ python app.py
 - **Blog**: http://localhost:5000
 - **Admin Panel**: http://localhost:5000/admin/login
   - Username: `mehedims`
-  - Password: `admin` or `admin2244`
+  - Password: `admin2244`
 
 ## 🤖 AI Setup (Optional)
 
@@ -164,6 +164,15 @@ SECRET_KEY="your-secret-key-here"
 GEMINI_API_KEY="your-gemini-api-key"
 DATABASE_URL="your-database-url"  # Optional: for PostgreSQL
 ```
+
+### 🌐 Domain Configuration
+
+**Important**: The application automatically detects and uses the domain you're accessing it from:
+- **Development**: `http://localhost:5000` 
+- **Production**: `https://yourdomain.com`
+- **Custom Domain**: Any domain you configure
+
+No manual URL changes needed! The sitemap, robots.txt, and all SEO meta tags automatically adapt to your domain.
 
 ## 🛠️ Built With
 

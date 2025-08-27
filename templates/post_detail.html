@@ -10,6 +10,14 @@
 {% block og_image %}
 {% if post.cover_image %}
 <meta property="og:image" content="{{ url_for('static', filename='uploads/' + post.cover_image, _external=True) }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+{% endif %}
+{% endblock %}
+
+{% block twitter_image %}
+{% if post.cover_image %}
+<meta name="twitter:image" content="{{ url_for('static', filename='uploads/' + post.cover_image, _external=True) }}">
 {% endif %}
 {% endblock %}
 
