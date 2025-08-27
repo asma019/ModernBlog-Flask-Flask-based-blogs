@@ -31,13 +31,11 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     
     <!-- Custom Tracking Code -->
-    {% set tracking_code = '' %}
     {% if tracking_code %}
     {{ tracking_code|safe }}
     {% endif %}
     
     <!-- Header Ads -->
-    {% set ads_header = '' %}
     {% if ads_header %}
     {{ ads_header|safe }}
     {% endif %}
@@ -131,7 +129,6 @@
     </main>
 
     <!-- Footer Ads -->
-    {% set ads_footer = '' %}
     {% if ads_footer %}
     <div class="bg-gray-100 py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

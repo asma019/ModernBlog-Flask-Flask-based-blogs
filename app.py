@@ -144,7 +144,10 @@ def index():
     menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
     site_name = Setting.get('site_name', 'ModernBlog')
     logo = Setting.get('logo')
-    return render_template('index.html', posts=posts, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo)
+    tracking_code = Setting.get('tracking_code')
+    ads_header = Setting.get('ads_header')
+    ads_footer = Setting.get('ads_footer')
+    return render_template('index.html', posts=posts, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo, tracking_code=tracking_code, ads_header=ads_header, ads_footer=ads_footer)
 
 @app.route('/post/<slug>', methods=['GET', 'POST'])
 def post_detail(slug):
@@ -166,7 +169,10 @@ def post_detail(slug):
     menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
     site_name = Setting.get('site_name', 'ModernBlog')
     logo = Setting.get('logo')
-    return render_template('post_detail.html', post=post, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo)
+    tracking_code = Setting.get('tracking_code')
+    ads_header = Setting.get('ads_header')
+    ads_footer = Setting.get('ads_footer')
+    return render_template('post_detail.html', post=post, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo, tracking_code=tracking_code, ads_header=ads_header, ads_footer=ads_footer)
 
 @app.route('/category/<slug>')
 def category_posts(slug):
