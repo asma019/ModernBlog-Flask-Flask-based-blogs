@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - {{ site_name or 'ModernBlog' }}{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="max-w-md w-full text-center">
+        <div class="mb-8">
+            <h1 class="text-9xl font-bold text-gray-300">404</h1>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Page Not Found</h2>
+            <p class="text-gray-600 mb-8">The page you're looking for doesn't exist or has been moved.</p>
+        </div>
+        
+        <div class="space-y-4">
+            <a href="{{ url_for('index') }}" 
+               class="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                <i class="fas fa-home mr-2"></i>Go Home
+            </a>
+            
+            <div class="mt-6">
+                <form action="{{ url_for('search') }}" method="GET" class="flex max-w-sm mx-auto">
+                    <input type="text" name="q" placeholder="Search posts..." 
+                           class="flex-1 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-gray-600 text-white px-4 py-2 rounded-r-lg hover:bg-gray-700 transition-colors">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

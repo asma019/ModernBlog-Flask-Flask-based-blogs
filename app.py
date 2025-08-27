@@ -810,6 +810,15 @@ Return only the markdown content, no additional text or formatting.
     except Exception as e:
         return jsonify({'error': f'Failed to generate blog: {str(e)}'}), 500
 
+@app.errorhandler(404)
+def not_found_error(error):
+    categories = Category.query.all()
+    pages = Page.query.filter_by(published=True).all()
+    menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
+    site_name = Setting.get('site_name', 'ModernBlog')
+    logo = Setting.get('logo')
+    return render_template('404.html', categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo), 404
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
