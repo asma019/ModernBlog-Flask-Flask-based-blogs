@@ -58,8 +58,8 @@ A modern, feature-rich blogging platform built with Flask, featuring AI-powered 
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/asma019/ModernBlog.git
-cd ModernBlog
+git clone https://github.com/asma019/ModernBlog-Flask-Flask-based-blogs.git
+cd ModernBlog-Flask-Flask-based-blogs
 ```
 
 2. **Install dependencies**
@@ -81,7 +81,7 @@ python app.py
 - **Blog**: http://localhost:5000
 - **Admin Panel**: http://localhost:5000/admin/login
   - Username: `mehedims`
-  - Password: `admin2244`
+  - Password: `admin` or `admin2244`
 
 ## 🤖 AI Setup (Optional)
 
@@ -229,7 +229,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**Asma** - [GitHub](https://github.com/asma019)
+**Mehedi Hasan** - [GitHub](https://github.com/asma019)
 
 ## 🙏 Acknowledgments
 
@@ -242,7 +242,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 If you have any questions or need help:
 
-1. Check the [Issues](https://github.com/asma019/ModernBlog/issues) page
+1. Check the [Issues](https://github.com/asma019/ModernBlog-Flask-Flask-based-blogs/issues) page
 2. Create a new issue if your problem isn't already reported
 3. Star ⭐ this repository if you find it helpful!
 
@@ -250,4 +250,4 @@ If you have any questions or need help:
 
 **Happy Blogging!** 🎉
 
-Made with ❤️ by [Asma](https://github.com/asma019)
+Made with ❤️ by [Mehedi Hasan](https://github.com/asma019)
