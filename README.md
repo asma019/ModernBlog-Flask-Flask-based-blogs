@@ -165,9 +165,138 @@ GEMINI_API_KEY="your-gemini-api-key"
 DATABASE_URL="your-database-url"  # Optional: for PostgreSQL
 ```
 
-### 🌐 Domain Configuration
+### 🌐 Production Deployment with Custom Domain
 
-**Important**: The application automatically detects and uses the domain you're accessing it from:
+#### **Option 1: VPS/Server Deployment (Recommended)**
+
+1. **Server Setup**
+```bash
+# Update system
+sudo apt update && sudo apt upgrade -y
+
+# Install Python and dependencies
+sudo apt install python3 python3-pip python3-venv nginx -y
+```
+
+2. **Deploy Application**
+```bash
+# Clone repository
+git clone https://github.com/asma019/ModernBlog-Flask-Flask-based-blogs.git
+cd ModernBlog-Flask-Flask-based-blogs
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+pip install gunicorn
+
+# Initialize database
+python init_db.py
+```
+
+3. **Create Gunicorn Service**
+```bash
+sudo nano /etc/systemd/system/modernblog.service
+```
+
+Add this content:
+```ini
+[Unit]
+Description=ModernBlog Flask App
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/path/to/ModernBlog
+Environment="PATH=/path/to/ModernBlog/venv/bin"
+Environment="SECRET_KEY=your-secret-key-here"
+Environment="GEMINI_API_KEY=your-gemini-key"
+ExecStart=/path/to/ModernBlog/venv/bin/gunicorn --workers 3 --bind unix:modernblog.sock -m 007 app:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+4. **Configure Nginx**
+```bash
+sudo nano /etc/nginx/sites-available/yourdomain.com
+```
+
+Add this configuration:
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com www.yourdomain.com;
+    
+    location / {
+        include proxy_params;
+        proxy_pass http://unix:/path/to/ModernBlog/modernblog.sock;
+    }
+    
+    location /static {
+        alias /path/to/ModernBlog/static;
+        expires 30d;
+    }
+}
+```
+
+5. **Enable Site and SSL**
+```bash
+# Enable site
+sudo ln -s /etc/nginx/sites-available/yourdomain.com /etc/nginx/sites-enabled
+sudo nginx -t
+sudo systemctl restart nginx
+
+# Start services
+sudo systemctl start modernblog
+sudo systemctl enable modernblog
+
+# Install SSL with Let's Encrypt
+sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
+```
+
+#### **Option 2: Docker Deployment**
+
+Create `Dockerfile`:
+```dockerfile
+FROM python:3.9-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY . .
+EXPOSE 5000
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
+```
+
+Create `docker-compose.yml`:
+```yaml
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=your-secret-key
+      - GEMINI_API_KEY=your-gemini-key
+    volumes:
+      - ./static/uploads:/app/static/uploads
+      - ./blog.db:/app/blog.db
+```
+
+Deploy:
+```bash
+docker-compose up -d
+```
+
+#### **Domain Configuration**
+
+**Important**: The application automatically detects your domain:
 - **Development**: `http://localhost:5000` 
 - **Production**: `https://yourdomain.com`
 - **Custom Domain**: Any domain you configure
