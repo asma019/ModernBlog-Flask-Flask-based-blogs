@@ -185,7 +185,10 @@ def category_posts(slug):
     menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
     site_name = Setting.get('site_name', 'ModernBlog')
     logo = Setting.get('logo')
-    return render_template('category.html', posts=posts, category=category, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo)
+    tracking_code = Setting.get('tracking_code')
+    ads_header = Setting.get('ads_header')
+    ads_footer = Setting.get('ads_footer')
+    return render_template('category.html', posts=posts, category=category, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo, tracking_code=tracking_code, ads_header=ads_header, ads_footer=ads_footer)
 
 @app.route('/search')
 def search():
@@ -210,7 +213,10 @@ def search():
     menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
     site_name = Setting.get('site_name', 'ModernBlog')
     logo = Setting.get('logo')
-    return render_template('search.html', posts=posts, query=query, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo)
+    tracking_code = Setting.get('tracking_code')
+    ads_header = Setting.get('ads_header')
+    ads_footer = Setting.get('ads_footer')
+    return render_template('search.html', posts=posts, query=query, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo, tracking_code=tracking_code, ads_header=ads_header, ads_footer=ads_footer)
 
 @app.route('/page/<slug>', methods=['GET', 'POST'])
 def page_detail(slug):
@@ -234,7 +240,10 @@ def page_detail(slug):
     menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
     site_name = Setting.get('site_name', 'ModernBlog')
     logo = Setting.get('logo')
-    return render_template('page_detail.html', page=page, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo)
+    tracking_code = Setting.get('tracking_code')
+    ads_header = Setting.get('ads_header')
+    ads_footer = Setting.get('ads_footer')
+    return render_template('page_detail.html', page=page, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo, tracking_code=tracking_code, ads_header=ads_header, ads_footer=ads_footer)
 
 @app.route('/categories')
 def categories():
@@ -243,7 +252,10 @@ def categories():
     menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
     site_name = Setting.get('site_name', 'ModernBlog')
     logo = Setting.get('logo')
-    return render_template('categories.html', categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo)
+    tracking_code = Setting.get('tracking_code')
+    ads_header = Setting.get('ads_header')
+    ads_footer = Setting.get('ads_footer')
+    return render_template('categories.html', categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo, tracking_code=tracking_code, ads_header=ads_header, ads_footer=ads_footer)
 
 @app.route('/tag/<slug>')
 def tag_posts(slug):
@@ -256,7 +268,10 @@ def tag_posts(slug):
     menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
     site_name = Setting.get('site_name', 'ModernBlog')
     logo = Setting.get('logo')
-    return render_template('tag.html', posts=posts, tag=tag, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo)
+    tracking_code = Setting.get('tracking_code')
+    ads_header = Setting.get('ads_header')
+    ads_footer = Setting.get('ads_footer')
+    return render_template('tag.html', posts=posts, tag=tag, categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo, tracking_code=tracking_code, ads_header=ads_header, ads_footer=ads_footer)
 
 # Admin routes
 @app.route('/admin/login', methods=['GET', 'POST'])
@@ -893,7 +908,10 @@ def not_found_error(error):
     menu_items = MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all()
     site_name = Setting.get('site_name', 'ModernBlog')
     logo = Setting.get('logo')
-    return render_template('404.html', categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo), 404
+    tracking_code = Setting.get('tracking_code')
+    ads_header = Setting.get('ads_header')
+    ads_footer = Setting.get('ads_footer')
+    return render_template('404.html', categories=categories, pages=pages, menu_items=menu_items, site_name=site_name, logo=logo, tracking_code=tracking_code, ads_header=ads_header, ads_footer=ads_footer), 404
 
 if __name__ == '__main__':
     with app.app_context():
