@@ -62,8 +62,18 @@ git clone https://github.com/asma019/ModernBlog-Flask-Flask-based-blogs.git
 cd ModernBlog-Flask-Flask-based-blogs
 ```
 
-2. **Install dependencies**
+2. **Create virtual environment and install dependencies**
 ```bash
+# Install python3-venv if not available
+sudo apt install python3-venv python3-full -y
+
+# Create virtual environment
+python3 -m venv venv
+
+# Activate virtual environment
+source venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
@@ -74,6 +84,10 @@ python init_db.py
 
 4. **Run the application**
 ```bash
+# Make sure virtual environment is activated
+source venv/bin/activate
+
+# Run the application
 python app.py
 ```
 
