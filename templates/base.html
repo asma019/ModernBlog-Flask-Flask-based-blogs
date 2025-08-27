@@ -31,6 +31,7 @@
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
     
     <!-- Custom Tracking Code -->
+    <!-- DEBUG: tracking_code = '{{ tracking_code }}' -->
     {% if tracking_code %}
     {{ tracking_code|safe }}
     {% endif %}
