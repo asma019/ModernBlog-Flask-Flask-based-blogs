@@ -1,0 +1,51 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}Categories{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Add New Category -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Add New Category</h3>
+        <form method="POST" action="{{ url_for('admin_new_category') }}">
+            <div class="flex space-x-3">
+                <input type="text" 
+                       name="name" 
+                       placeholder="Category name"
+                       required
+                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <button type="submit" 
+                        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-plus mr-2"></i>Add
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Categories List -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Existing Categories</h3>
+        {% if categories %}
+        <div class="space-y-3">
+            {% for category in categories %}
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div>
+                    <h4 class="font-medium text-gray-800">{{ category.name }}</h4>
+                    <p class="text-sm text-gray-600">{{ category.posts|length }} posts</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <a href="{{ url_for('category_posts', slug=category.slug) }}" 
+                       target="_blank"
+                       class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500 text-center py-4">No categories yet</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

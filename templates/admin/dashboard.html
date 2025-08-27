@@ -1,0 +1,153 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                <i class="fas fa-file-alt text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Posts</p>
+                <p class="text-2xl font-bold text-gray-900">{{ posts_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-green-100 text-green-600">
+                <i class="fas fa-eye text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Published</p>
+                <p class="text-2xl font-bold text-gray-900">{{ published_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                <i class="fas fa-folder text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Categories</p>
+                <p class="text-2xl font-bold text-gray-900">{{ categories_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                <i class="fas fa-tags text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Tags</p>
+                <p class="text-2xl font-bold text-gray-900">{{ tags_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-red-100 text-red-600">
+                <i class="fas fa-comments text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Pending Comments</p>
+                <p class="text-2xl font-bold text-gray-900">{{ pending_comments }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+            <div class="p-3 rounded-full bg-orange-100 text-orange-600">
+                <i class="fas fa-envelope text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">New Messages</p>
+                <p class="text-2xl font-bold text-gray-900">{{ unread_contacts }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+        <div class="space-y-3">
+            <a href="{{ url_for('admin_new_post') }}" 
+               class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                <i class="fas fa-plus text-blue-600 mr-3"></i>
+                <span class="text-blue-800 font-medium">Create New Post</span>
+            </a>
+            <a href="{{ url_for('admin_posts') }}" 
+               class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <i class="fas fa-list text-gray-600 mr-3"></i>
+                <span class="text-gray-800 font-medium">Manage Posts</span>
+            </a>
+            <a href="{{ url_for('admin_categories') }}" 
+               class="flex items-center p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors">
+                <i class="fas fa-folder-plus text-purple-600 mr-3"></i>
+                <span class="text-purple-800 font-medium">Manage Categories</span>
+            </a>
+            <a href="{{ url_for('admin_comments') }}" 
+               class="flex items-center p-3 bg-red-50 rounded-lg hover:bg-red-100 transition-colors">
+                <i class="fas fa-comments text-red-600 mr-3"></i>
+                <span class="text-red-800 font-medium">Manage Comments</span>
+                {% if pending_comments > 0 %}
+                <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full ml-2">{{ pending_comments }}</span>
+                {% endif %}
+            </a>
+            <a href="{{ url_for('admin_contacts') }}" 
+               class="flex items-center p-3 bg-orange-50 rounded-lg hover:bg-orange-100 transition-colors">
+                <i class="fas fa-envelope text-orange-600 mr-3"></i>
+                <span class="text-orange-800 font-medium">Contact Messages</span>
+                {% if unread_contacts > 0 %}
+                <span class="bg-orange-500 text-white text-xs px-2 py-1 rounded-full ml-2">{{ unread_contacts }}</span>
+                {% endif %}
+            </a>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Posts</h3>
+        {% if recent_posts %}
+        <div class="space-y-3">
+            {% for post in recent_posts %}
+            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                <div class="flex-1">
+                    <h4 class="font-medium text-gray-800 truncate">{{ post.title }}</h4>
+                    <p class="text-sm text-gray-600">{{ post.created_at.strftime('%B %d, %Y') }}</p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    {% if post.published %}
+                    <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Published</span>
+                    {% else %}
+                    <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Draft</span>
+                    {% endif %}
+                    <a href="{{ url_for('admin_edit_post', id=post.id) }}" 
+                       class="text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-gray-500 text-center py-4">No posts yet</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Welcome Message -->
+<div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow p-6 text-white">
+    <h2 class="text-2xl font-bold mb-2">Welcome to ModernBlog Admin!</h2>
+    <p class="text-blue-100">Manage your blog content with this powerful admin panel. Create posts, organize categories, and keep your blog updated.</p>
+</div>
+{% endblock %}

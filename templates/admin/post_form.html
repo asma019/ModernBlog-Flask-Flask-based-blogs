@@ -1,0 +1,242 @@
+{% extends "admin/base.html" %}
+
+{% block page_title %}{% if post %}Edit Post{% else %}New Post{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">
+            {% if post %}Edit Post{% else %}Create New Post{% endif %}
+        </h2>
+        <a href="{{ url_for('admin_posts') }}" 
+           class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Posts
+        </a>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Main Content -->
+                <div class="lg:col-span-2 space-y-6">
+                    <!-- AI Generation -->
+                    <div class="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-4 border border-purple-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-medium text-gray-800">
+                                <i class="fas fa-robot text-purple-600 mr-2"></i>AI Blog Generation
+                            </h4>
+                        </div>
+                        <div class="flex gap-3">
+                            <input type="text" 
+                                   id="ai-topic" 
+                                   placeholder="Enter a topic (e.g., 'Benefits of Cloud Computing')"
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <button type="button" 
+                                    id="generate-blog-btn"
+                                    class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                                <i class="fas fa-magic mr-2"></i>Generate
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-2">AI will generate title, excerpt, and content. You can edit everything after generation.</p>
+                    </div>
+
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
+                        <input type="text" 
+                               id="title" 
+                               name="title" 
+                               value="{{ post.title if post else '' }}"
+                               required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <div>
+                        <label for="slug" class="block text-sm font-medium text-gray-700 mb-2">URL Slug</label>
+                        <input type="text" 
+                               id="slug" 
+                               name="slug" 
+                               value="{{ post.slug if post else '' }}"
+                               placeholder="custom-url-slug (leave empty to auto-generate)"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">This will be used in the URL. Leave empty to auto-generate from title.</p>
+                    </div>
+
+                    <div>
+                        <label for="excerpt" class="block text-sm font-medium text-gray-700 mb-2">Excerpt</label>
+                        <textarea id="excerpt" 
+                                  name="excerpt" 
+                                  rows="3"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                  placeholder="Brief description of the post...">{{ post.excerpt if post else '' }}</textarea>
+                    </div>
+
+                    <div>
+                        <label for="content" class="block text-sm font-medium text-gray-700 mb-2">Content (Markdown)</label>
+                        <textarea id="content" 
+                                  name="content" 
+                                  rows="20"
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">{{ post.content if post else '' }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Publish -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-800 mb-3">Publish</h3>
+                        <div class="space-y-3">
+                            <label class="flex items-center">
+                                <input type="checkbox" 
+                                       name="published" 
+                                       {% if post and post.published %}checked{% endif %}
+                                       class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">Published</span>
+                            </label>
+                            <button type="submit" 
+                                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                {% if post %}Update Post{% else %}Create Post{% endif %}
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cover Image -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-800 mb-3">Cover Image</h3>
+                        {% if post and post.cover_image %}
+                        <div class="mb-3">
+                            <img src="{{ url_for('static', filename='uploads/' + post.cover_image) }}" 
+                                 alt="Current cover" 
+                                 class="w-full h-32 object-cover rounded-lg">
+                        </div>
+                        {% endif %}
+                        <input type="file" 
+                               name="cover_image" 
+                               accept="image/*"
+                               class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                    </div>
+
+                    <!-- Category -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-800 mb-3">Category</h3>
+                        <select name="category_id" 
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">No category</option>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}" 
+                                    {% if post and post.category_id == category.id %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="font-medium text-gray-800 mb-3">Tags</h3>
+                        <input type="text" 
+                               name="tags" 
+                               value="{{ tag_names if tag_names is defined else '' }}"
+                               placeholder="tag1, tag2, tag3"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">Separate tags with commas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-generate slug from title
+    function slugify(text) {
+        return text
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '') // Remove special characters
+            .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with hyphens
+            .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    }
+
+    const titleInput = document.getElementById('title');
+    const slugInput = document.getElementById('slug');
+    let slugManuallyEdited = {{ 'true' if post else 'false' }};
+
+    titleInput.addEventListener('input', function() {
+        if (!slugManuallyEdited) {
+            slugInput.value = slugify(this.value);
+        }
+    });
+
+    slugInput.addEventListener('input', function() {
+        slugManuallyEdited = true;
+    });
+
+    // AI Blog Generation
+    document.getElementById('generate-blog-btn').addEventListener('click', async function() {
+        const topic = document.getElementById('ai-topic').value.trim();
+        if (!topic) {
+            alert('Please enter a topic for AI generation');
+            return;
+        }
+
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Generating...';
+        btn.disabled = true;
+
+        try {
+            const response = await fetch('/admin/generate-blog', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ topic: topic })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Fill the form with generated content
+                document.getElementById('title').value = data.title;
+                document.getElementById('excerpt').value = data.excerpt;
+                easyMDE.value(data.content);
+                
+                // Auto-generate slug from title
+                slugManuallyEdited = false;
+                document.getElementById('slug').value = slugify(data.title);
+                
+                alert('Blog content generated successfully! You can now edit and customize it.');
+            } else {
+                alert('Error: ' + data.error);
+            }
+        } catch (error) {
+            alert('Failed to generate blog content. Please try again.');
+        } finally {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }
+    });
+
+    // Initialize EasyMDE markdown editor
+    let easyMDE;
+    easyMDE = new EasyMDE({
+        element: document.getElementById('content'),
+        spellChecker: false,
+        toolbar: [
+            'bold', 'italic', 'heading', '|',
+            'quote', 'unordered-list', 'ordered-list', '|',
+            'link', 'upload-image', '|',
+            'preview', 'side-by-side', 'fullscreen', '|',
+            'guide'
+        ],
+        uploadImage: true,
+        imageUploadFunction: function(file, onSuccess, onError) {
+            uploadImage(file, onSuccess, onError);
+        },
+        imageUploadEndpoint: '/admin/upload',
+        placeholder: 'Write your blog post content here using Markdown...\n\nTip: Drag & drop images directly into the editor!',
+        dragDrop: true
+    });
+</script>
+{% endblock %}
