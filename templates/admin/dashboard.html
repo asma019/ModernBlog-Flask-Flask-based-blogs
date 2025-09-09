@@ -2,84 +2,84 @@
 
 {% block content %}
 <!-- Stats Cards -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
-    <div class="bg-white rounded-lg shadow p-6">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4 lg:gap-6 mb-6 lg:mb-8">
+    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-blue-100 text-blue-600">
-                <i class="fas fa-file-alt text-xl"></i>
+            <div class="p-2 lg:p-3 rounded-full bg-blue-100 text-blue-600">
+                <i class="fas fa-file-alt text-lg lg:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Total Posts</p>
-                <p class="text-2xl font-bold text-gray-900">{{ posts_count }}</p>
+            <div class="ml-3 lg:ml-4">
+                <p class="text-xs lg:text-sm font-medium text-gray-600">Total Posts</p>
+                <p class="text-xl lg:text-2xl font-bold text-gray-900">{{ posts_count }}</p>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-green-100 text-green-600">
-                <i class="fas fa-eye text-xl"></i>
+            <div class="p-2 lg:p-3 rounded-full bg-green-100 text-green-600">
+                <i class="fas fa-eye text-lg lg:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Published</p>
-                <p class="text-2xl font-bold text-gray-900">{{ published_count }}</p>
+            <div class="ml-3 lg:ml-4">
+                <p class="text-xs lg:text-sm font-medium text-gray-600">Published</p>
+                <p class="text-xl lg:text-2xl font-bold text-gray-900">{{ published_count }}</p>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-purple-100 text-purple-600">
-                <i class="fas fa-folder text-xl"></i>
+            <div class="p-2 lg:p-3 rounded-full bg-purple-100 text-purple-600">
+                <i class="fas fa-folder text-lg lg:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Categories</p>
-                <p class="text-2xl font-bold text-gray-900">{{ categories_count }}</p>
+            <div class="ml-3 lg:ml-4">
+                <p class="text-xs lg:text-sm font-medium text-gray-600">Categories</p>
+                <p class="text-xl lg:text-2xl font-bold text-gray-900">{{ categories_count }}</p>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
-                <i class="fas fa-tags text-xl"></i>
+            <div class="p-2 lg:p-3 rounded-full bg-yellow-100 text-yellow-600">
+                <i class="fas fa-tags text-lg lg:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Tags</p>
-                <p class="text-2xl font-bold text-gray-900">{{ tags_count }}</p>
+            <div class="ml-3 lg:ml-4">
+                <p class="text-xs lg:text-sm font-medium text-gray-600">Tags</p>
+                <p class="text-xl lg:text-2xl font-bold text-gray-900">{{ tags_count }}</p>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-red-100 text-red-600">
-                <i class="fas fa-comments text-xl"></i>
+            <div class="p-2 lg:p-3 rounded-full bg-red-100 text-red-600">
+                <i class="fas fa-comments text-lg lg:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">Pending Comments</p>
-                <p class="text-2xl font-bold text-gray-900">{{ pending_comments }}</p>
+            <div class="ml-3 lg:ml-4">
+                <p class="text-xs lg:text-sm font-medium text-gray-600">Pending Comments</p>
+                <p class="text-xl lg:text-2xl font-bold text-gray-900">{{ pending_comments }}</p>
             </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
+    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
         <div class="flex items-center">
-            <div class="p-3 rounded-full bg-orange-100 text-orange-600">
-                <i class="fas fa-envelope text-xl"></i>
+            <div class="p-2 lg:p-3 rounded-full bg-orange-100 text-orange-600">
+                <i class="fas fa-envelope text-lg lg:text-xl"></i>
             </div>
-            <div class="ml-4">
-                <p class="text-sm font-medium text-gray-600">New Messages</p>
-                <p class="text-2xl font-bold text-gray-900">{{ unread_contacts }}</p>
+            <div class="ml-3 lg:ml-4">
+                <p class="text-xs lg:text-sm font-medium text-gray-600">New Messages</p>
+                <p class="text-xl lg:text-2xl font-bold text-gray-900">{{ unread_contacts }}</p>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Quick Actions -->
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8">
+    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
+        <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
         <div class="space-y-3">
             <a href="{{ url_for('admin_new_post') }}" 
                class="flex items-center p-3 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
@@ -115,15 +115,15 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Posts</h3>
+    <div class="bg-white rounded-lg shadow p-4 lg:p-6">
+        <h3 class="text-base lg:text-lg font-semibold text-gray-800 mb-4">Recent Posts</h3>
         {% if recent_posts %}
         <div class="space-y-3">
             {% for post in recent_posts %}
-            <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3 bg-gray-50 rounded-lg space-y-2 sm:space-y-0">
                 <div class="flex-1">
-                    <h4 class="font-medium text-gray-800 truncate">{{ post.title }}</h4>
-                    <p class="text-sm text-gray-600">{{ post.created_at.strftime('%B %d, %Y') }}</p>
+                    <h4 class="font-medium text-gray-800 text-sm lg:text-base line-clamp-1">{{ post.title }}</h4>
+                    <p class="text-xs lg:text-sm text-gray-600">{{ post.created_at.strftime('%B %d, %Y') }}</p>
                 </div>
                 <div class="flex items-center space-x-2">
                     {% if post.published %}
@@ -132,7 +132,7 @@
                     <span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Draft</span>
                     {% endif %}
                     <a href="{{ url_for('admin_edit_post', id=post.id) }}" 
-                       class="text-blue-600 hover:text-blue-800">
+                       class="text-blue-600 hover:text-blue-800 p-1">
                         <i class="fas fa-edit"></i>
                     </a>
                 </div>
@@ -146,8 +146,8 @@
 </div>
 
 <!-- Welcome Message -->
-<div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow p-6 text-white">
-    <h2 class="text-2xl font-bold mb-2">Welcome to ModernBlog Admin!</h2>
-    <p class="text-blue-100">Manage your blog content with this powerful admin panel. Create posts, organize categories, and keep your blog updated.</p>
+<div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow p-4 lg:p-6 text-white">
+    <h2 class="text-xl lg:text-2xl font-bold mb-2">Welcome to ModernBlog Admin!</h2>
+    <p class="text-sm lg:text-base text-blue-100">Manage your blog content with this powerful admin panel. Create posts, organize categories, and keep your blog updated.</p>
 </div>
 {% endblock %}

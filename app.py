@@ -10,9 +10,43 @@ from slugify import slugify
 import google.generativeai as genai
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')
+
+# Database configuration - supports both SQLite and PostgreSQL
+database_url = os.environ.get('DATABASE_URL')
+db_host = os.environ.get('DB_HOST')
+db_name = os.environ.get('DB_NAME')
+db_user = os.environ.get('DB_USER')
+db_pass = os.environ.get('DB_PASS')
+db_port = os.environ.get('DB_PORT', '5432')
+
+if database_url:
+    # PostgreSQL configuration via DATABASE_URL
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+elif db_host and db_name and db_user and db_pass:
+    # PostgreSQL configuration via individual environment variables with security
+    try:
+        from urllib.parse import quote_plus
+        escaped_user = quote_plus(db_user)
+        escaped_pass = quote_plus(db_pass)
+        escaped_host = quote_plus(db_host)
+        escaped_db = quote_plus(db_name)
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{escaped_user}:{escaped_pass}@{escaped_host}:{db_port}/{escaped_db}?sslmode=prefer'
+    except ImportError:
+        app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{db_user}:{db_pass}@{db_host}:{db_port}/{db_name}'
+else:
+    # Default SQLite configuration
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blog.db'
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+if 'postgresql' in app.config['SQLALCHEMY_DATABASE_URI']:
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+        'connect_args': {'connect_timeout': 10}
+    }
 app.config['UPLOAD_FOLDER'] = 'static/uploads'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
@@ -20,6 +54,21 @@ db = SQLAlchemy(app)
 
 # Ensure upload directory exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+# Template context processor
+@app.context_processor
+def inject_template_vars():
+    return {
+        'current_year': datetime.now().year,
+        'site_name': Setting.get('site_name', 'ModernBlog'),
+        'categories': Category.query.all(),
+        'menu_items': MenuItem.query.filter_by(active=True).order_by(MenuItem.order).all(),
+        'tracking_code': Setting.get('tracking_code'),
+        'ads_header': Setting.get('ads_header'),
+        'ads_content': Setting.get('ads_content'),
+        'ads_sidebar': Setting.get('ads_sidebar'),
+        'ads_footer': Setting.get('ads_footer')
+    }
 
 # Models
 class Category(db.Model):
@@ -470,6 +519,25 @@ def admin_new_category():
     flash('Category created successfully!')
     return redirect(url_for('admin_categories'))
 
+@app.route('/admin/categories/<int:id>/edit', methods=['POST'])
+@admin_required
+def admin_edit_category(id):
+    category = Category.query.get_or_404(id)
+    category.name = request.form['name']
+    category.slug = slugify(category.name)
+    db.session.commit()
+    flash('Category updated successfully!')
+    return redirect(url_for('admin_categories'))
+
+@app.route('/admin/categories/<int:id>/delete', methods=['POST'])
+@admin_required
+def admin_delete_category(id):
+    category = Category.query.get_or_404(id)
+    db.session.delete(category)
+    db.session.commit()
+    flash('Category deleted successfully!')
+    return redirect(url_for('admin_categories'))
+
 @app.route('/admin/comments')
 @admin_required
 def admin_comments():
@@ -728,6 +796,7 @@ def admin_settings():
         Setting.set('gemini_api_key', request.form.get('gemini_api_key', ''))
         Setting.set('tracking_code', request.form.get('tracking_code', ''))
         Setting.set('ads_header', request.form.get('ads_header', ''))
+        Setting.set('ads_content', request.form.get('ads_content', ''))
         Setting.set('ads_sidebar', request.form.get('ads_sidebar', ''))
         Setting.set('ads_footer', request.form.get('ads_footer', ''))
         
@@ -752,6 +821,7 @@ def admin_settings():
                          gemini_api_key=Setting.get('gemini_api_key'),
                          tracking_code=Setting.get('tracking_code'),
                          ads_header=Setting.get('ads_header'),
+                         ads_content=Setting.get('ads_content'),
                          ads_sidebar=Setting.get('ads_sidebar'),
                          ads_footer=Setting.get('ads_footer'),
                          pending_comments=pending_comments,

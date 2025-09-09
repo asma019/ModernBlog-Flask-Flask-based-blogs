@@ -1,132 +1,573 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <title>{{ site_name or 'ModernBlog' }}</title>
+    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root { --primary-color: #1173d4; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        @media (max-width: 640px) { .hero-h { height: 200px; } .card-h { height: 300px; } }
+        
+        /* Theme classes */
+        body.dark {
+            background-color: #111827;
+            color: #ffffff;
+        }
+        body.light {
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+        
+        /* Dark theme styles */
+        .dark .bg-gray-900 { background-color: #111827; }
+        .dark .bg-gray-800 { background-color: #1f2937; }
+        .dark .bg-gray-700 { background-color: #374151; }
+        .dark .text-white { color: #ffffff; }
+        .dark .text-gray-300 { color: #d1d5db; }
+        .dark .text-gray-400 { color: #9ca3af; }
+        .dark .border-gray-700 { border-color: #374151; }
+        
+        /* Dark theme search bar */
+        .dark input[type="search"] {
+            background-color: rgba(31, 41, 55, 0.5) !important;
+            color: #ffffff !important;
+            border-color: #374151 !important;
+        }
+        .dark input[type="search"]::placeholder {
+            color: #9ca3af !important;
+        }
+        
+        /* Light theme styles */
+        .light .bg-gray-900 { background-color: #f8fafc; }
+        .light .bg-gray-800 { background-color: #ffffff; }
+        .light .bg-gray-700 { background-color: #f1f5f9; }
+        .light .text-white { color: #0f172a; }
+        .light .text-gray-300 { color: #334155; }
+        .light .text-gray-400 { color: #64748b; }
+        .light .border-gray-700 { border-color: #cbd5e1; }
+        .light header { background-color: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .light footer { background: linear-gradient(135deg, #f1f5f9, #e2e8f0, #f8fafc); }
+        
+        /* Light theme search bar */
+        .light input[type="search"] {
+            background-color: #f1f5f9 !important;
+            color: #1f2937 !important;
+            border-color: #cbd5e1 !important;
+        }
+        .light input[type="search"]::placeholder {
+            color: #64748b !important;
+        }
+        
+        /* Light theme buttons */
+        .light button {
+            color: #0f172a;
+        }
+        .light button:hover {
+            background-color: #e2e8f0;
+        }
+        
+        /* Light theme form buttons */
+        .light button[type="submit"] {
+            background-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        .light button[type="submit"]:hover {
+            background-color: #2563eb !important;
+        }
+        
+        /* Light theme social share buttons */
+        .light .bg-blue-500 {
+            background-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        .light .bg-blue-500:hover {
+            background-color: #2563eb !important;
+        }
+        .light .bg-blue-600 {
+            background-color: #2563eb !important;
+            color: #ffffff !important;
+        }
+        .light .bg-blue-600:hover {
+            background-color: #1d4ed8 !important;
+        }
+        .light .bg-blue-700 {
+            background-color: #1d4ed8 !important;
+            color: #ffffff !important;
+        }
+        .light .bg-blue-700:hover {
+            background-color: #1e40af !important;
+        }
+        
+        /* Light theme navigation buttons */
+        .light .bg-gray-800 {
+            background-color: #e5e7eb !important;
+            color: #1f2937 !important;
+        }
+        .light .bg-gray-800:hover {
+            background-color: #d1d5db !important;
+        }
+        
+        /* Light theme category badges */
+        .light .bg-blue-600\/20 {
+            background-color: #dbeafe !important;
+            color: #1d4ed8 !important;
+        }
+        
+        /* Light theme tag buttons */
+        .light .bg-gray-700\/50 {
+            background-color: #ffffff !important;
+            color: #475569 !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        .light .bg-gray-700\/50:hover {
+            background-color: #f8fafc !important;
+            color: #1e293b !important;
+            border-color: #cbd5e1 !important;
+        }
+        
+        /* Light theme links */
+        .light a {
+            color: #2563eb;
+        }
+        .light a:hover {
+            color: #1d4ed8;
+        }
+        
+        /* Light theme text colors */
+        .light .text-blue-400 {
+            color: #1d4ed8 !important;
+        }
+        .light .text-gray-500 {
+            color: #64748b !important;
+        }
+        
+        /* Light theme card improvements */
+        .light article {
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        .light article:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Light theme slideshow text */
+        .light .slide h1 {
+            color: #ffffff !important;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        .light .slide p {
+            color: #f3f4f6 !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        }
+        .light .slide a {
+            background-color: #3b82f6 !important;
+            color: #ffffff !important;
+        }
+        
+        /* Light theme mobile menu */
+        .light #mobile-menu {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+        }
+        .light #mobile-menu .border-gray-700 {
+            border-color: #e2e8f0 !important;
+        }
+        .light #mobile-menu a {
+            color: #1f2937 !important;
+        }
+        .light #mobile-menu a:hover {
+            color: #3b82f6 !important;
+        }
+    </style>
+    
+    {% if tracking_code %}
+    {{ tracking_code|safe }}
+    {% endif %}
+    
+    {% if ads_header %}
+    {{ ads_header|safe }}
+    {% endif %}
+</head>
+<body class="font-sans transition-colors duration-300 dark" id="body">
+<div class="flex min-h-screen flex-col bg-gray-900 text-white">
 
-{% block title %}{{ site_name or 'ModernBlog' }} - Modern Blog Platform{% endblock %}
-{% block description %}Discover amazing content on {{ site_name or 'ModernBlog' }}. Read the latest posts, insights, and stories from our community of writers.{% endblock %}
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="fixed inset-0 z-50 hidden bg-gray-900/95 backdrop-blur md:hidden">
+<div class="flex h-full flex-col">
+<div class="flex items-center justify-between p-4 border-b border-gray-700">
+<h2 class="text-lg font-bold">Menu</h2>
+<button id="close-menu" class="p-2 hover:bg-gray-800 rounded">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<nav class="flex-1 p-4 space-y-4">
+<a href="{{ url_for('index') }}" class="block py-3 text-lg text-white border-b border-gray-700">Home</a>
+<a href="{{ url_for('categories') }}" class="block py-3 text-lg text-gray-400 hover:text-white border-b border-gray-700">Categories</a>
+{% for menu_item in menu_items %}
+<a href="{{ menu_item.url }}" class="block py-3 text-lg text-gray-400 hover:text-white border-b border-gray-700">{{ menu_item.title }}</a>
+{% endfor %}
+<div class="pt-4">
+<form action="{{ url_for('search') }}" method="GET" class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+<input name="q" class="w-full h-12 rounded-lg bg-gray-800 pl-10 pr-4 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500" placeholder="Search..." type="search"/>
+</form>
+</div>
+</nav>
+</div>
+</div>
 
-{% block structured_data %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "{{ site_name or 'ModernBlog' }}",
-  "url": "{{ url_for('index', _external=True) }}",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "{{ url_for('search', _external=True) }}?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
+<header class="sticky top-0 z-40 w-full border-b border-gray-700/50 bg-gray-900/90 backdrop-blur">
+<div class="mx-auto max-w-7xl flex items-center justify-between px-4 py-3">
+<div class="flex items-center gap-3">
+<svg class="h-7 w-7 text-blue-500" fill="currentColor" viewBox="0 0 48 48">
+<path d="M24 18.4L42 11.5V34.4c0 .4-.3.8-.6.9L24 42V18.4z"/>
+<path d="M24 8.2l9.4 3.4L24 15.2l-9.4-3.8L24 8.2z"/>
+</svg>
+<h1 class="text-lg font-bold">{{ site_name or 'ModernBlog' }}</h1>
+</div>
+<nav class="hidden md:flex items-center gap-6 text-sm">
+<a class="text-white hover:text-blue-400" href="{{ url_for('index') }}">Home</a>
+<a class="text-gray-400 hover:text-blue-400" href="{{ url_for('categories') }}">Categories</a>
+{% for menu_item in menu_items[:2] %}
+<a class="text-gray-400 hover:text-blue-400" href="{{ menu_item.url }}">{{ menu_item.title }}</a>
+{% endfor %}
+</nav>
+<div class="flex items-center gap-3">
+<div class="hidden sm:block">
+<form action="{{ url_for('search') }}" method="GET" class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">search</span>
+<input name="q" class="h-9 w-48 rounded-lg bg-gray-800/50 pl-9 pr-3 text-sm text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500" placeholder="Search..." type="search"/>
+</form>
+</div>
+<button class="p-2 hover:bg-gray-800 rounded transition-colors" id="theme-toggle">
+<span class="material-symbols-outlined text-sm" id="theme-icon">light_mode</span>
+</button>
+<button class="md:hidden p-2 hover:bg-gray-800 rounded" id="mobile-menu-btn">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</div>
+</header>
+
+<main class="mx-auto max-w-7xl flex-1 px-4 py-4 sm:py-6">
+<!-- Top Banner Ad -->
+{% if ads_header %}
+<div class="mb-6 text-center">
+<div class="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4 overflow-hidden">
+{{ ads_header|safe }}
+</div>
+</div>
+{% endif %}
+
+<div class="relative mb-6 hero-h sm:h-80 lg:h-96 w-full overflow-hidden rounded-xl" id="hero-slideshow">
+<!-- Slideshow Images -->
+{% for post in posts.items[:3] %}
+<div class="slide absolute inset-0 transition-opacity duration-1000 {% if loop.index0 == 0 %}opacity-100{% else %}opacity-0{% endif %}">
+{% if post.cover_image %}
+<div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ url_for('static', filename='uploads/' + post.cover_image) }}')"></div>
+{% else %}
+<div class="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600"></div>
+{% endif %}
+<div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4 sm:p-6 lg:p-8 w-full">
+<h1 class="text-lg sm:text-2xl lg:text-3xl font-black mb-2 line-clamp-2">{{ post.title }}</h1>
+<p class="text-sm sm:text-base text-gray-300 mb-3 line-clamp-2 hidden sm:block">{{ post.excerpt[:80] if post.excerpt else post.content[:80] }}...</p>
+<a href="{{ url_for('post_detail', slug=post.slug) }}" class="inline-flex items-center bg-blue-600 text-white px-4 py-2 text-sm rounded-lg hover:bg-blue-700">
+Read More
+<span class="material-symbols-outlined ml-1 text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+{% endfor %}
+
+<!-- Fallback if no posts -->
+{% if not posts.items %}
+<div class="slide absolute inset-0 opacity-100">
+<div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-4 sm:p-8 w-full">
+<div class="flex items-center gap-3 mb-3">
+<span class="material-symbols-outlined text-3xl sm:text-4xl text-blue-400">terminal</span>
+<h1 class="text-2xl sm:text-4xl lg:text-5xl font-black">Master Programming</h1>
+</div>
+<p class="mt-2 text-sm sm:text-lg text-gray-300 hidden sm:block max-w-2xl">
+Explore cutting-edge programming tutorials, best practices, and industry insights to elevate your coding skills.
+</p>
+</div>
+</div>
+{% endif %}
+
+<!-- Navigation Dots -->
+{% if posts.items|length > 1 %}
+<div class="absolute bottom-3 right-3 flex space-x-1.5">
+{% for post in posts.items[:3] %}
+<button class="slide-dot w-2 h-2 sm:w-3 sm:h-3 rounded-full {% if loop.index0 == 0 %}bg-white{% else %}bg-white/40{% endif %}" data-slide="{{ loop.index0 }}"></button>
+{% endfor %}
+</div>
+{% endif %}
+
+<!-- Navigation Arrows -->
+{% if posts.items|length > 1 %}
+<button class="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full hidden sm:block" id="prev-slide">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full hidden sm:block" id="next-slide">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+{% endif %}
+</div>
+
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-blue-400 text-2xl">code</span>
+<h2 class="text-xl sm:text-2xl lg:text-3xl font-bold">Latest Programming Articles</h2>
+</div>
+
+<!-- Horizontal Ad Before Posts -->
+{% if ads_content %}
+<div class="mb-8 text-center">
+<div class="bg-gray-800/30 border border-gray-700/30 rounded-lg p-4 overflow-hidden">
+{{ ads_content|safe }}
+</div>
+</div>
+{% endif %}
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 sm:gap-6">
+{% for post in posts.items %}
+
+<!-- Ad after every 4th post -->
+{% if loop.index % 4 == 0 and ads_content %}
+<div class="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 my-4">
+<div class="bg-gray-800/20 border border-gray-700/20 rounded-lg p-4 text-center overflow-hidden">
+<div class="text-xs text-gray-500 mb-2">Advertisement</div>
+{{ ads_content|safe }}
+</div>
+</div>
+{% endif %}
+<article class="group flex flex-col overflow-hidden rounded-xl bg-gray-800 shadow-lg hover:shadow-xl hover:shadow-blue-500/10 hover:-translate-y-1 transition-all duration-300 card-h border border-gray-700/50 hover:border-gray-600/50">
+<a class="block h-full" href="{{ url_for('post_detail', slug=post.slug) }}">
+<div class="relative overflow-hidden">
+{% if post.cover_image %}
+<img alt="{{ post.title }}" class="h-40 sm:h-48 w-full object-cover group-hover:scale-105 transition-transform duration-300" src="{{ url_for('static', filename='uploads/' + post.cover_image) }}" loading="lazy"/>
+<div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+{% else %}
+<div class="h-40 sm:h-48 bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-600 flex items-center justify-center relative">
+<div class="text-center">
+<span class="material-symbols-outlined text-4xl text-white/90 mb-2">code</span>
+<span class="text-white text-lg font-bold">{{ post.title[0] }}</span>
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent"></div>
+</div>
+{% endif %}
+{% if post.category %}
+<div class="absolute top-3 left-3">
+<span class="bg-blue-600/90 text-white text-xs px-2 py-1 rounded-full font-medium backdrop-blur-sm">
+{{ post.category.name }}
+</span>
+</div>
+{% endif %}
+</div>
+<div class="flex flex-1 flex-col p-4">
+<h3 class="text-base sm:text-lg font-bold text-white line-clamp-2 mb-2 group-hover:text-blue-300 transition-colors">{{ post.title }}</h3>
+<p class="text-sm text-gray-400 line-clamp-3 mb-3 flex-1 leading-relaxed">{{ post.excerpt[:120] if post.excerpt else post.content[:120] }}...</p>
+<div class="flex flex-wrap gap-1.5 mb-3">
+{% for tag in post.tags[:2] %}
+<span class="rounded-full bg-gray-700/50 px-2 py-1 text-xs text-gray-300 border border-gray-600/30">{{ tag.name }}</span>
+{% endfor %}
+</div>
+<div class="flex items-center justify-between text-xs">
+<div class="flex items-center gap-1 text-gray-500">
+<span class="material-symbols-outlined text-xs">schedule</span>
+<span>{{ (post.content|length / 200)|round|int }} min</span>
+</div>
+<time class="text-gray-500">{{ post.created_at.strftime('%b %d') }}</time>
+</div>
+</div>
+</a>
+</article>
+{% endfor %}
+</div>
+
+<!-- Bottom Content Ad -->
+{% if ads_content %}
+<div class="mt-8 mb-6 text-center">
+<div class="bg-gray-800/30 border border-gray-700/30 rounded-lg p-4 overflow-hidden">
+<div class="text-xs text-gray-500 mb-2">Advertisement</div>
+{{ ads_content|safe }}
+</div>
+</div>
+{% endif %}
+
+</main>
+
+<footer class="border-t border-gray-700/50 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 mt-12">
+<div class="mx-auto max-w-7xl px-4 py-8">
+<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+<div class="col-span-1 sm:col-span-2 lg:col-span-1">
+<div class="flex items-center gap-2 mb-4">
+<svg class="h-6 w-6 text-blue-500" fill="currentColor" viewBox="0 0 48 48">
+<path d="M24 18.4L42 11.5V34.4c0 .4-.3.8-.6.9L24 42V18.4z"/>
+<path d="M24 8.2l9.4 3.4L24 15.2l-9.4-3.8L24 8.2z"/>
+</svg>
+<h3 class="text-lg font-bold">{{ site_name or 'ModernBlog' }}</h3>
+</div>
+<p class="text-sm text-gray-400 leading-relaxed">Discover the latest in technology, programming, and digital innovation through our expert articles and tutorials.</p>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-white mb-3">Quick Links</h4>
+<ul class="space-y-2 text-sm text-gray-400">
+<li><a href="{{ url_for('index') }}" class="hover:text-white transition-colors">Home</a></li>
+<li><a href="{{ url_for('categories') }}" class="hover:text-white transition-colors">Categories</a></li>
+{% for menu_item in menu_items[:2] %}
+<li><a href="{{ menu_item.url }}" class="hover:text-white transition-colors">{{ menu_item.title }}</a></li>
+{% endfor %}
+</ul>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-white mb-3">Categories</h4>
+<ul class="space-y-2 text-sm text-gray-400">
+{% for category in categories[:4] %}
+<li><a href="{{ url_for('category_posts', slug=category.slug) }}" class="hover:text-white transition-colors">{{ category.name }}</a></li>
+{% endfor %}
+</ul>
+</div>
+<div>
+<h4 class="text-sm font-semibold text-white mb-3">Connect</h4>
+<div class="flex gap-3">
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/></svg>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/></svg>
+</a>
+<a href="#" class="text-gray-400 hover:text-white transition-colors">
+<svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.012.001z"/></svg>
+</a>
+</div>
+</div>
+</div>
+<div class="border-t border-gray-700/50 mt-8 pt-6 text-center">
+<p class="text-sm text-gray-400">&copy; {{ current_year }} {{ site_name }}. All rights reserved.</p>
+</div>
+</div>
+</footer>
+
+<!-- Sidebar Ad (Desktop) -->
+<aside class="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 w-48 z-30">
+{% if ads_sidebar %}
+<div class="bg-gray-800/50 border border-gray-700/50 rounded-lg p-3 mb-4 overflow-hidden">
+<div class="text-xs text-gray-500 mb-2 text-center">Advertisement</div>
+{{ ads_sidebar|safe }}
+</div>
+{% endif %}
+</aside>
+
+{% if ads_footer %}
+<div class="bg-gray-800/50 border-t border-gray-700/50 py-6">
+<div class="mx-auto max-w-7xl px-4 text-center">
+{{ ads_footer|safe }}
+</div>
+</div>
+{% endif %}
+
+</div>
+
+<script>
+// Mobile menu
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+const closeMenuBtn = document.getElementById('close-menu');
+
+function toggleMobileMenu() {
+ mobileMenu.classList.toggle('hidden');
+ document.body.classList.toggle('overflow-hidden');
 }
+
+mobileMenuBtn?.addEventListener('click', toggleMobileMenu);
+closeMenuBtn?.addEventListener('click', toggleMobileMenu);
+mobileMenu?.addEventListener('click', (e) => {
+ if (e.target === mobileMenu) toggleMobileMenu();
+});
+
+// Theme toggle
+const themeToggle = document.getElementById('theme-toggle');
+const themeIcon = document.getElementById('theme-icon');
+const body = document.body;
+
+function setTheme(theme) {
+ body.classList.remove('dark', 'light');
+ body.classList.add(theme);
+ if (themeIcon) {
+ themeIcon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+ }
+ localStorage.setItem('theme', theme);
+}
+
+// Load saved theme
+const savedTheme = localStorage.getItem('theme') || 'dark';
+setTheme(savedTheme);
+
+themeToggle?.addEventListener('click', () => {
+ const currentTheme = body.classList.contains('dark') ? 'dark' : 'light';
+ setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+});
+
+// Slideshow
+let currentSlide = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.slide-dot');
+const totalSlides = slides.length;
+
+function showSlide(index) {
+ slides.forEach((slide, i) => {
+ slide.style.opacity = i === index ? '1' : '0';
+ });
+ dots.forEach((dot, i) => {
+ dot.classList.toggle('bg-white', i === index);
+ dot.classList.toggle('bg-white/40', i !== index);
+ });
+}
+
+function nextSlide() {
+ currentSlide = (currentSlide + 1) % totalSlides;
+ showSlide(currentSlide);
+}
+
+function prevSlide() {
+ currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+ showSlide(currentSlide);
+}
+
+if (totalSlides > 1) {
+ setInterval(nextSlide, 5000);
+ document.getElementById('next-slide')?.addEventListener('click', nextSlide);
+ document.getElementById('prev-slide')?.addEventListener('click', prevSlide);
+ dots.forEach((dot, index) => {
+ dot.addEventListener('click', () => {
+ currentSlide = index;
+ showSlide(currentSlide);
+ });
+ });
+}
+
+// Touch swipe for mobile
+let startX = 0;
+const heroSlideshow = document.getElementById('hero-slideshow');
+heroSlideshow?.addEventListener('touchstart', (e) => {
+ startX = e.touches[0].clientX;
+});
+heroSlideshow?.addEventListener('touchend', (e) => {
+ const endX = e.changedTouches[0].clientX;
+ const diff = startX - endX;
+ if (Math.abs(diff) > 50) {
+ if (diff > 0) nextSlide();
+ else prevSlide();
+ }
+});
 </script>
-{% endblock %}
 
-{% block content %}
-<!-- Hero Section -->
-<section class="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-12 sm:py-16 lg:py-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">Welcome to {{ site_name or 'ModernBlog' }}</h1>
-        <p class="text-lg sm:text-xl mb-6 sm:mb-8 max-w-2xl mx-auto px-4">Discover amazing stories, insights, and knowledge from our community of writers</p>
-        <a href="#posts" class="inline-block bg-white text-blue-600 px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-            Explore Posts <i class="fas fa-arrow-down ml-2"></i>
-        </a>
-    </div>
-</section>
-
-<!-- Posts Section -->
-<section id="posts" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-    <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-8 sm:mb-12 text-center">Latest Posts</h2>
-    
-    {% if posts.items %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-        {% for post in posts.items %}
-        <article class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-            {% if post.cover_image %}
-            <div class="h-48 bg-gray-200 overflow-hidden">
-                <img src="{{ url_for('static', filename='uploads/' + post.cover_image) }}" 
-                     alt="{{ post.title }}" 
-                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
-            </div>
-            {% endif %}
-            
-            <div class="p-4 sm:p-6">
-                {% if post.category %}
-                <span class="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full mb-3">
-                    {{ post.category.name }}
-                </span>
-                {% endif %}
-                
-                <h3 class="text-lg sm:text-xl font-bold text-gray-800 mb-3 hover:text-blue-600 transition-colors">
-                    <a href="{{ url_for('post_detail', slug=post.slug) }}">{{ post.title }}</a>
-                </h3>
-                
-                {% if post.excerpt %}
-                <p class="text-gray-600 mb-4">{{ post.excerpt[:150] }}...</p>
-                {% endif %}
-                
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-500 gap-2 sm:gap-0">
-                    <span><i class="fas fa-calendar mr-1"></i>{{ post.created_at.strftime('%B %d, %Y') }}</span>
-                    <a href="{{ url_for('post_detail', slug=post.slug) }}" 
-                       class="text-blue-600 hover:text-blue-800 font-medium">
-                        Read More <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
-                </div>
-                
-                {% if post.tags %}
-                <div class="mt-3 sm:mt-4 flex flex-wrap gap-1 sm:gap-2">
-                    {% for tag in post.tags %}
-                    <a href="{{ url_for('tag_posts', slug=tag.slug) }}" 
-                       class="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded hover:bg-gray-200 transition-colors">
-                        #{{ tag.name }}
-                    </a>
-                    {% endfor %}
-                </div>
-                {% endif %}
-            </div>
-        </article>
-        {% endfor %}
-    </div>
-    
-    <!-- Pagination -->
-    {% if posts.pages > 1 %}
-    <div class="flex justify-center mt-12">
-        <nav class="flex space-x-2">
-            {% if posts.has_prev %}
-            <a href="{{ url_for('index', page=posts.prev_num) }}" 
-               class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <i class="fas fa-chevron-left"></i>
-            </a>
-            {% endif %}
-            
-            {% for page_num in posts.iter_pages() %}
-                {% if page_num %}
-                    {% if page_num != posts.page %}
-                    <a href="{{ url_for('index', page=page_num) }}" 
-                       class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                        {{ page_num }}
-                    </a>
-                    {% else %}
-                    <span class="px-4 py-2 bg-blue-600 text-white rounded-lg">{{ page_num }}</span>
-                    {% endif %}
-                {% else %}
-                <span class="px-4 py-2">...</span>
-                {% endif %}
-            {% endfor %}
-            
-            {% if posts.has_next %}
-            <a href="{{ url_for('index', page=posts.next_num) }}" 
-               class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                <i class="fas fa-chevron-right"></i>
-            </a>
-            {% endif %}
-        </nav>
-    </div>
-    {% endif %}
-    
-    {% else %}
-    <div class="text-center py-16">
-        <i class="fas fa-file-alt text-6xl text-gray-300 mb-4"></i>
-        <h3 class="text-2xl font-bold text-gray-600 mb-2">No posts yet</h3>
-        <p class="text-gray-500">Check back later for amazing content!</p>
-    </div>
-    {% endif %}
-</section>
-{% endblock %}
+</body>
+</html>
