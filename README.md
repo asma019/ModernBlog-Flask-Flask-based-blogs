@@ -587,4 +587,4 @@ If you have any questions or need help:
 
 Made with ❤️ by [Mehedi Hasan](https://github.com/asma019)
 
-**Latest Version**: 2.1.0 | **Last Updated**: December 2024
+**Latest Version**: 2.1.0 | **Last Updated**: September 10 2025
