@@ -4,6 +4,8 @@
 .prose {
     color: #374151;
     max-width: none;
+    font-size: 1.125rem;
+    line-height: 1.8;
 }
 
 .prose h1 {
@@ -44,7 +46,8 @@
 .prose p {
     margin-top: 1.25em;
     margin-bottom: 1.25em;
-    line-height: 1.75;
+    line-height: 1.8;
+    font-size: 1.125rem;
 }
 
 .prose a {
@@ -225,8 +228,8 @@ html {
 /* Mobile optimizations */
 @media (max-width: 640px) {
     .prose {
-        font-size: 0.875rem;
-        line-height: 1.5;
+        font-size: 1rem;
+        line-height: 1.6;
     }
     
     .prose h1 {
@@ -277,7 +280,7 @@ html {
 /* Tablet optimizations */
 @media (min-width: 641px) and (max-width: 1024px) {
     .prose {
-        font-size: 0.9375rem;
+        font-size: 1.0625rem;
     }
     
     .prose h1 {
